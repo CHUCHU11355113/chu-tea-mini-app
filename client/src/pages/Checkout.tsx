@@ -249,15 +249,18 @@ export default function Checkout() {
         />
 
         {/* 积分支付 */}
-        {canUsePoints && (
+        {currentUser && (
           <Card className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Ticket className="w-5 h-5 text-teal-600" />
+                <Ticket className={`w-5 h-5 ${canUsePoints ? 'text-teal-600' : 'text-gray-400'}`} />
                 <div>
-                  <p className="font-medium">{t('points.usePoints')}</p>
+                  <p className={`font-medium ${canUsePoints ? '' : 'text-gray-400'}`}>{t('points.usePoints')}</p>
                   <p className="text-sm text-gray-500">
                     {t('points.available')}: {currentUser?.availablePoints} {t('points.points')}
+                    {!canUsePoints && (
+                      <span className="text-red-500 ml-2">（积分不足）</span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -267,10 +270,10 @@ export default function Checkout() {
                   id="usePoints"
                   checked={usePoints}
                   onChange={(e) => handlePointsToggle(e.target.checked)}
-                  disabled={selectedCouponId !== null}
-                  className="w-4 h-4 text-teal-600 rounded focus:ring-teal-500"
+                  disabled={selectedCouponId !== null || !canUsePoints}
+                  className="w-4 h-4 text-teal-600 rounded focus:ring-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
-                <Label htmlFor="usePoints" className="cursor-pointer">
+                <Label htmlFor="usePoints" className={`cursor-pointer ${!canUsePoints ? 'text-gray-400 cursor-not-allowed' : ''}`}>
                   {usePoints ? t('points.using') : t('points.use')}
                 </Label>
               </div>
