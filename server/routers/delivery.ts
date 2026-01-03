@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure, protectedProcedure } from "../_core/trpc";
-import { db } from "../db";
+import { getDb } from "../db";
 import { deliveryConfig } from "../../drizzle/schema";
 import { eq, and, isNull } from "drizzle-orm";
 
@@ -25,6 +25,8 @@ export const deliveryRouter = router({
 
         // 如果指定了门店ID，先查询门店配置
         if (input.storeId) {
+          const db = await getDb();
+          if (!db) throw new Error("Database not available");
           config = await db
             .select()
             .from(deliveryConfig)
@@ -37,7 +39,9 @@ export const deliveryRouter = router({
         }
 
         // 查询全局配置
-        config = await db
+        const db2 = await getDb();
+        if (!db2) throw new Error("Database not available");
+        config = await db2
           .select()
           .from(deliveryConfig)
           .where(isNull(deliveryConfig.storeId))
@@ -73,6 +77,8 @@ export const deliveryRouter = router({
    */
   list: protectedProcedure.query(async () => {
     try {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const configs = await db.select().from(deliveryConfig);
       return configs;
     } catch (error) {
@@ -102,6 +108,9 @@ export const deliveryRouter = router({
     .mutation(async ({ input }) => {
       try {
         const { id, ...data } = input;
+
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
 
         if (id) {
           // 更新现有配置
@@ -160,6 +169,8 @@ export const deliveryRouter = router({
     )
     .mutation(async ({ input }) => {
       try {
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
         await db.delete(deliveryConfig).where(eq(deliveryConfig.id, input.id));
         return { success: true };
       } catch (error) {
@@ -185,6 +196,9 @@ export const deliveryRouter = router({
       try {
         // 获取配置
         let config;
+
+        const db = await getDb();
+        if (!db) throw new Error("Database not available");
 
         if (input.storeId) {
           const storeConfig = await db

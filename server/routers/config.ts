@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, publicProcedure, protectedProcedure, adminProcedure } from "../_core/trpc";
-import { db } from "../db";
+import { getDb } from "../db";
 import { systemConfigs, configItems, businessRules } from "../../drizzle/schema";
 import { eq, and, isNull, or, lte, gte, desc } from "drizzle-orm";
 import { ruleEngine } from "../lib/rule-engine";
@@ -34,6 +34,8 @@ export const configRouter = router({
       })
     )
     .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
       const items = await db
         .select()
         .from(configItems)

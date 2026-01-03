@@ -5,6 +5,7 @@ import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
+import SimpleApp from "./SimpleApp";
 import { getLoginUrl } from "./const";
 import "./index.css";
 import "./lib/i18n"; // 初始化 i18n
@@ -103,10 +104,45 @@ const trpcClient = trpc.createClient({
   ],
 });
 
-createRoot(document.getElementById("root")!).render(
-  <trpc.Provider client={trpcClient} queryClient={queryClient}>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </trpc.Provider>
-);
+console.log('[App] Starting CHU TEA Mini App...');
+
+try {
+  const rootElement = document.getElementById("root");
+  
+  if (!rootElement) {
+    throw new Error('Root element not found!');
+  }
+  
+  console.log('[App] Root element found, creating React root...');
+  
+  const root = createRoot(rootElement);
+  
+  console.log('[App] Rendering application...');
+  
+  root.render(
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <SimpleApp />
+      </QueryClientProvider>
+    </trpc.Provider>
+  );
+  
+  console.log('[App] Application rendered successfully!');
+  
+} catch (error) {
+  console.error('[App] Fatal error during initialization:', error);
+  
+  const rootElement = document.getElementById("root");
+  if (rootElement) {
+    rootElement.innerHTML = `
+      <div style="padding: 40px; font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto;">
+        <h1 style="color: #ef4444; font-size: 32px; margin-bottom: 20px;">❌ 应用启动失败</h1>
+        <div style="background: #fee2e2; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+          <h2 style="font-size: 20px; margin-bottom: 10px;">错误信息：</h2>
+          <pre style="background: white; padding: 15px; border-radius: 8px; overflow: auto; font-size: 14px;">${error instanceof Error ? error.message : String(error)}\n\n${error instanceof Error && error.stack ? error.stack : ''}</pre>
+        </div>
+        <p>请检查浏览器控制台获取更多详细信息。</p>
+      </div>
+    `;
+  }
+}

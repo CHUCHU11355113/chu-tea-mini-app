@@ -1,4 +1,4 @@
-import { db } from '../db';
+import { getDb } from '../db';
 import { businessRules, ruleExecutionLogs, systemConfigs } from '../../drizzle/schema';
 import { eq, and, lte, gte, isNull, or, desc } from 'drizzle-orm';
 
@@ -453,6 +453,11 @@ export class RuleEngine {
     errorMessage: string | null
   ): Promise<void> {
     try {
+      const db = await getDb();
+      if (!db) {
+        console.warn('[RuleEngine] Database not available, skipping log');
+        return;
+      }
       await db.insert(ruleExecutionLogs).values({
         ruleId: rule.id,
         ruleCode: rule.code,
@@ -495,6 +500,11 @@ export class RuleEngine {
       conditions.push(eq(systemConfigs.code, code));
     }
 
+    const db = await getDb();
+    if (!db) {
+      console.warn('[RuleEngine] Database not available');
+      return [];
+    }
     return await db
       .select()
       .from(systemConfigs)
