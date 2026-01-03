@@ -71,13 +71,13 @@ echo ""
 # 7. 配置 MySQL
 echo -e "${YELLOW}[7/12] 配置 MySQL 数据库...${NC}"
 mysql -e "CREATE DATABASE IF NOT EXISTS chu_tea_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -e "CREATE USER IF NOT EXISTS 'chu_tea_user'@'localhost' IDENTIFIED BY 'ChuTea2025!@#';"
+mysql -e "CREATE USER IF NOT EXISTS 'chu_tea_user'@'localhost' IDENTIFIED BY 'chutea2025';"
 mysql -e "GRANT ALL PRIVILEGES ON chu_tea_db.* TO 'chu_tea_user'@'localhost';"
 mysql -e "FLUSH PRIVILEGES;"
 echo -e "${GREEN}✓ MySQL 配置完成${NC}"
 echo -e "${BLUE}数据库名: chu_tea_db${NC}"
 echo -e "${BLUE}用户名: chu_tea_user${NC}"
-echo -e "${BLUE}密码: ChuTea2025!@#${NC}"
+echo -e "${BLUE}密码: chutea2025${NC}"
 echo ""
 
 # 8. 克隆项目代码
@@ -98,7 +98,7 @@ echo ""
 echo -e "${YELLOW}[9/12] 配置环境变量...${NC}"
 cat > .env << 'EOF'
 # 数据库配置
-DATABASE_URL="mysql://chu_tea_user:ChuTea2025!@#@localhost:3306/chu_tea_db"
+DATABASE_URL="mysql://chu_tea_user:chutea2025@localhost:3306/chu_tea_db"
 
 # JWT 密钥
 JWT_SECRET="$(openssl rand -hex 32)"
@@ -175,7 +175,7 @@ echo ""
 echo -e "${YELLOW}数据库信息：${NC}"
 echo "  数据库名: chu_tea_db"
 echo "  用户名: chu_tea_user"
-echo "  密码: ChuTea2025!@#"
+echo "  密码: chutea2025"
 echo ""
 echo -e "${YELLOW}常用命令：${NC}"
 echo "  查看应用状态: pm2 status"
