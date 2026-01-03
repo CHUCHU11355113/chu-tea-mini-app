@@ -122,7 +122,7 @@ try {
   root.render(
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <SimpleApp />
+        <App />
       </QueryClientProvider>
     </trpc.Provider>
   );
