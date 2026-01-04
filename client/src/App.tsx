@@ -49,6 +49,7 @@ const InfluencerProfile = lazy(() => import("./pages/InfluencerProfile"));
 const Settings = lazy(() => import("./pages/Settings"));
 const NotificationSettings = lazy(() => import("./pages/NotificationSettings"));
 const DisplayScreen = lazy(() => import("./pages/DisplayScreen"));
+const TVDisplay = lazy(() => import("./pages/TVDisplay"));
 const StoreSelector = lazy(() => import("./pages/StoreSelector"));
 const Payment = lazy(() => import("./pages/Payment"));
 const PaymentCallback = lazy(() => import("./pages/PaymentCallback"));
@@ -130,6 +131,7 @@ function Router() {
       
       {/* 显示屏 */}
       <Route path="/display" component={DisplayScreen} />
+      <Route path="/tv-display" component={TVDisplay} />
       
       {/* 个人中心 */}
       <Route path="/profile" component={Profile} />

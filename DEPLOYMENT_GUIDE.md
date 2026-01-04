@@ -108,7 +108,7 @@ mysql -u chu_tea_user -pchutea2025 chu_tea_db < test-account-setup.sql
 ### 测试场景
 
 #### 1. 购物车测试
-1. 访问 http://43.166.239.99:3000
+1. 访问 https://www.chutea.cc
 2. 浏览商品列表
 3. 点击商品查看详情
 4. 选择杯型、温度、糖度、配料
@@ -141,7 +141,7 @@ mysql -u chu_tea_user -pchutea2025 chu_tea_db < test-account-setup.sql
 7. **验证取餐码格式：T+4位数字**（例如：T1234）
 
 #### 5. TV显示屏测试
-1. 访问 http://43.166.239.99:3000/tv-display
+1. 访问 https://www.chutea.cc/tv-display
 2. 验证页面显示准备中和可取餐订单
 3. 验证取餐码大字体显示
 4. 验证自动刷新功能
@@ -160,9 +160,9 @@ mysql -u chu_tea_user -pchutea2025 chu_tea_db < test-account-setup.sql
 
 ## 📱 访问地址
 
-- **主应用**: http://43.166.239.99:3000
-- **TV显示屏**: http://43.166.239.99:3000/tv-display
-- **后台管理**: http://43.166.239.99:3000/admin
+- **主应用**: https://www.chutea.cc
+- **TV显示屏**: https://www.chutea.cc/tv-display
+- **后台管理**: https://www.chutea.cc/admin
 
 ---
 
