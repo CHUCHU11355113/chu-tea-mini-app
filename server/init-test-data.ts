@@ -3,23 +3,25 @@
  * 为所有用户添加优惠券和积分
  */
 
-import { db as database } from './db';
+import { getDb } from './db';
 import { couponTemplates, userCoupons, users, pointsHistory } from '../drizzle/schema';
 import { eq, sql } from 'drizzle-orm';
 
 export async function initTestData() {
   console.log('🚀 开始初始化测试数据...');
   
+  const db = await getDb();
+  
   try {
     // 1. 创建满100减50优惠券模板
-    const existingTemplate = await database.query.couponTemplates.findFirst({
+    const existingTemplate = await db.query.couponTemplates.findFirst({
       where: eq(couponTemplates.code, 'SAVE50'),
     });
     
     let templateId: number;
     
     if (!existingTemplate) {
-      const [newTemplate] = await database.insert(couponTemplates).values({
+      const [result] = await db.insert(couponTemplates).values({
         code: 'SAVE50',
         nameZh: '满100减50',
         nameRu: 'Скидка 50₽ при заказе от 100₽',
@@ -37,7 +39,7 @@ export async function initTestData() {
         validDays: 30,
         isActive: true,
       });
-      templateId = newTemplate.insertId;
+      templateId = result.insertId;
       console.log('✅ 创建优惠券模板成功，ID:', templateId);
     } else {
       templateId = existingTemplate.id;
@@ -45,13 +47,15 @@ export async function initTestData() {
     }
     
     // 2. 获取所有用户
-    const allUsers = await database.query.users.findMany();
+    const allUsers = await db.query.users.findMany();
     console.log(`📊 找到 ${allUsers.length} 个用户`);
+    
+    let updatedCount = 0;
     
     for (const user of allUsers) {
       // 3. 为每个用户添加1000积分
       if (user.availablePoints < 1000) {
-        await database.update(users)
+        await db.update(users)
           .set({
             availablePoints: sql`${users.availablePoints} + 1000`,
             totalPoints: sql`${users.totalPoints} + 1000`,
@@ -59,7 +63,7 @@ export async function initTestData() {
           .where(eq(users.id, user.id));
         
         // 记录积分历史
-        await database.insert(pointsHistory).values({
+        await db.insert(pointsHistory).values({
           userId: user.id,
           type: 'adjust',
           points: 1000,
@@ -73,7 +77,7 @@ export async function initTestData() {
       }
       
       // 4. 为每个用户添加10张优惠券
-      const existingCoupons = await database.query.userCoupons.findMany({
+      const existingCoupons = await db.query.userCoupons.findMany({
         where: eq(userCoupons.userId, user.id),
       });
       
@@ -91,13 +95,14 @@ export async function initTestData() {
           expireAt: expireAt,
         }));
         
-        await database.insert(userCoupons).values(couponsData);
+        await db.insert(userCoupons).values(couponsData);
         console.log(`✅ 用户 ${user.id} 添加 ${couponsToAdd} 张优惠券`);
+        updatedCount++;
       }
     }
     
     console.log('🎉 测试数据初始化完成！');
-    return { success: true, message: '测试数据初始化完成' };
+    return { success: true, message: `测试数据初始化完成，更新了 ${updatedCount} 个用户` };
   } catch (error) {
     console.error('❌ 初始化失败:', error);
     return { success: false, message: String(error) };
