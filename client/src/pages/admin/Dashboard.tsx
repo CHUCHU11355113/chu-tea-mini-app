@@ -14,11 +14,39 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   CreditCard,
+  Gift,
+  Loader2,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function AdminDashboard() {
   const { t } = useTranslation();
   const [paymentPeriod, setPaymentPeriod] = useState<'today' | 'week' | 'month'>('today');
+  const [isInitializing, setIsInitializing] = useState(false);
+  
+  // 初始化测试数据 mutation
+  const initTestDataMutation = trpc.admin.initTestData.useMutation({
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success('✅ 测试数据初始化成功！所有用户已获得1000积分和10张优惠券');
+      } else {
+        toast.error('初始化失败: ' + data.message);
+      }
+      setIsInitializing(false);
+    },
+    onError: (error) => {
+      toast.error('初始化失败: ' + error.message);
+      setIsInitializing(false);
+    },
+  });
+  
+  const handleInitTestData = () => {
+    if (confirm('确定要为所有用户添加1000积分和10张满100减50优惠券吗？')) {
+      setIsInitializing(true);
+      initTestDataMutation.mutate();
+    }
+  };
 
   // 获取支付统计数据
   const { data: paymentStats, isLoading: paymentStatsLoading } = trpc.payment.getStatistics.useQuery({
@@ -95,9 +123,22 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-bold">{t("admin.dashboard.title")}</h1>
-        <p className="text-gray-500">{t("admin.dashboard.subtitle")}</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("admin.dashboard.title")}</h1>
+          <p className="text-gray-500">{t("admin.dashboard.subtitle")}</p>
+        </div>
+        <Button
+          onClick={handleInitTestData}
+          disabled={isInitializing}
+          className="bg-purple-600 hover:bg-purple-700"
+        >
+          {isInitializing ? (
+            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> 初始化中...</>
+          ) : (
+            <><Gift className="mr-2 h-4 w-4" /> 初始化测试数据</>
+          )}
+        </Button>
       </div>
 
       {/* 支付统计卡片 */}

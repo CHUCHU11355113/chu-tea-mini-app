@@ -11,6 +11,7 @@ import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_
 import { z } from "zod";
 import * as db from "./db";
 import { getTVDisplayOrders, updateOrderStatus } from "./db-tv-display";
+import { initTestData } from "./init-test-data";
 
 export const appRouter = router({
   system: systemRouter,
@@ -1639,6 +1640,13 @@ export const appRouter = router({
           filename: `ab-test-${input.groupTag}-${new Date().toISOString().split('T')[0]}.xlsx`,
         };
       }),
+  }),
+  
+  // 管理工具
+  admin: router({
+    initTestData: adminProcedure.mutation(async () => {
+      return await initTestData();
+    }),
   }),
 });
 
