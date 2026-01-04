@@ -4,111 +4,168 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { trpc } from '@/lib/trpc';
 import { useState } from 'react';
 import { toast } from "sonner";
-import { Gift, Coins, UserPlus, Loader2 } from "lucide-react";
+import { Gift, Coins, UserPlus, Loader2, RefreshCw } from "lucide-react";
 
 export default function AdminTools() {
   const { t } = useTranslation();
   
-  // 批量发放优惠券
-  const [couponTemplateId, setCouponTemplateId] = useState<string>("");
-  const [couponCount, setCouponCount] = useState<number>(10);
-  const [isSendingCoupons, setIsSendingCoupons] = useState(false);
+  // 批量发放优惠券给所有用户
+  const [couponId, setCouponId] = useState<string>("");
+  const [couponQuantity, setCouponQuantity] = useState<number>(10);
   
-  // 批量发放积分
+  // 批量发放积分给所有用户
   const [pointsAmount, setPointsAmount] = useState<number>(1000);
-  const [isSendingPoints, setIsSendingPoints] = useState(false);
+  const [pointsReason, setPointsReason] = useState<string>("管理员发放");
   
   // 创建测试账号
-  const [testAccountName, setTestAccountName] = useState<string>("");
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [telegramId, setTelegramId] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
   
   // 获取优惠券模板列表
-  const { data: couponTemplates } = trpc.coupon.listTemplates.useQuery();
+  const { data: couponTemplates } = trpc.adminCoupons.getCouponTemplates.useQuery();
   
-  // 批量发放优惠券 mutation
-  const sendCouponsMutation = trpc.admin.sendCouponsToAllUsers.useMutation({
-    onSuccess: (data) => {
-      toast.success(`✅ 成功！已为 ${data.userCount} 个用户发放 ${data.couponCount} 张优惠券`);
-      setIsSendingCoupons(false);
+  // 初始化测试数据
+  const initTestDataMutation = trpc.admin.initTestData.useMutation({
+    onSuccess: () => {
+      toast.success('✅ 测试数据初始化成功！');
     },
     onError: (error) => {
-      toast.error('发放失败: ' + error.message);
-      setIsSendingCoupons(false);
+      toast.error('初始化失败: ' + error.message);
     },
   });
   
-  // 批量发放积分 mutation
-  const sendPointsMutation = trpc.admin.sendPointsToAllUsers.useMutation({
+  // 批量发放优惠券给所有用户
+  const issueAllUsersCouponsMutation = trpc.admin.issueAllUsersCoupons.useMutation({
     onSuccess: (data) => {
-      toast.success(`✅ 成功！已为 ${data.userCount} 个用户发放 ${data.totalPoints} 积分`);
-      setIsSendingPoints(false);
+      toast.success(`✅ ${data.message}`);
     },
     onError: (error) => {
       toast.error('发放失败: ' + error.message);
-      setIsSendingPoints(false);
     },
   });
   
-  // 创建测试账号 mutation
+  // 批量发放积分给所有用户
+  const issueAllUsersPointsMutation = trpc.admin.issueAllUsersPoints.useMutation({
+    onSuccess: (data) => {
+      toast.success(`✅ ${data.message}`);
+    },
+    onError: (error) => {
+      toast.error('发放失败: ' + error.message);
+    },
+  });
+  
+  // 创建测试账号
   const createTestAccountMutation = trpc.admin.createTestAccount.useMutation({
     onSuccess: (data) => {
-      toast.success(`✅ 测试账号创建成功！\nTelegram ID: ${data.telegramId}\n积分: ${data.points}\n优惠券: ${data.coupons}张`);
-      setIsCreatingAccount(false);
-      setTestAccountName("");
+      toast.success(`✅ ${data.message}\nTelegram ID: ${data.user?.telegramId}`);
+      setTelegramId("");
+      setUsername("");
+      setFirstName("");
+      setLastName("");
     },
     onError: (error) => {
       toast.error('创建失败: ' + error.message);
-      setIsCreatingAccount(false);
     },
   });
   
-  const handleSendCoupons = () => {
-    if (!couponTemplateId) {
+  const handleInitTestData = () => {
+    if (confirm('确定要初始化测试数据吗？\n这将创建示例优惠券、商品等数据。')) {
+      initTestDataMutation.mutate();
+    }
+  };
+  
+  const handleIssueAllUsersCoupons = () => {
+    if (!couponId) {
       toast.error('请选择优惠券模板');
       return;
     }
-    if (confirm(`确定要为所有用户发放 ${couponCount} 张优惠券吗？`)) {
-      setIsSendingCoupons(true);
-      sendCouponsMutation.mutate({
-        templateId: parseInt(couponTemplateId),
-        count: couponCount,
+    if (confirm(`确定要为所有用户发放 ${couponQuantity} 张优惠券吗？`)) {
+      issueAllUsersCouponsMutation.mutate({
+        couponId: parseInt(couponId),
+        quantity: couponQuantity,
       });
     }
   };
   
-  const handleSendPoints = () => {
+  const handleIssueAllUsersPoints = () => {
     if (confirm(`确定要为所有用户发放 ${pointsAmount} 积分吗？`)) {
-      setIsSendingPoints(true);
-      sendPointsMutation.mutate({
-        amount: pointsAmount,
+      issueAllUsersPointsMutation.mutate({
+        points: pointsAmount,
+        reason: pointsReason,
       });
     }
   };
   
   const handleCreateTestAccount = () => {
-    if (!testAccountName.trim()) {
-      toast.error('请输入测试账号名称');
+    if (!telegramId.trim()) {
+      toast.error('请输入Telegram ID');
       return;
     }
-    if (confirm(`确定要创建测试账号 "${testAccountName}" 吗？\n将自动获得1000积分和10张优惠券`)) {
-      setIsCreatingAccount(true);
+    if (!username.trim()) {
+      toast.error('请输入用户名');
+      return;
+    }
+    if (confirm(`确定要创建测试账号吗？\nTelegram ID: ${telegramId}\n用户名: ${username}`)) {
       createTestAccountMutation.mutate({
-        name: testAccountName,
+        telegramId,
+        username,
+        firstName,
+        lastName,
       });
     }
   };
   
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">管理工具</h1>
-        <p className="text-gray-500 mt-2">批量操作和测试工具</p>
+        <p className="text-gray-500 mt-2">批量操作和测试数据管理工具</p>
       </div>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+        {/* 初始化测试数据 */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center space-x-2">
+              <RefreshCw className="h-5 w-5 text-purple-500" />
+              <CardTitle>初始化测试数据</CardTitle>
+            </div>
+            <CardDescription>创建示例优惠券、商品等测试数据</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-sm text-gray-600 space-y-2">
+              <p>将创建以下测试数据：</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>示例优惠券模板</li>
+                <li>示例商品</li>
+                <li>示例分类</li>
+              </ul>
+            </div>
+            
+            <Button 
+              onClick={handleInitTestData} 
+              disabled={initTestDataMutation.isPending}
+              className="w-full"
+              variant="outline"
+            >
+              {initTestDataMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  初始化中...
+                </>
+              ) : (
+                '初始化测试数据'
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+        
         {/* 批量发放优惠券 */}
         <Card>
           <CardHeader>
@@ -121,7 +178,7 @@ export default function AdminTools() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label>优惠券模板</Label>
-              <Select value={couponTemplateId} onValueChange={setCouponTemplateId}>
+              <Select value={couponId} onValueChange={setCouponId}>
                 <SelectTrigger>
                   <SelectValue placeholder="选择优惠券模板" />
                 </SelectTrigger>
@@ -143,17 +200,17 @@ export default function AdminTools() {
                 type="number"
                 min="1"
                 max="100"
-                value={couponCount}
-                onChange={(e) => setCouponCount(parseInt(e.target.value) || 1)}
+                value={couponQuantity}
+                onChange={(e) => setCouponQuantity(parseInt(e.target.value) || 1)}
               />
             </div>
             
             <Button 
-              onClick={handleSendCoupons} 
-              disabled={isSendingCoupons}
+              onClick={handleIssueAllUsersCoupons} 
+              disabled={issueAllUsersCouponsMutation.isPending}
               className="w-full"
             >
-              {isSendingCoupons ? (
+              {issueAllUsersCouponsMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   发放中...
@@ -180,22 +237,28 @@ export default function AdminTools() {
               <Input
                 type="number"
                 min="1"
-                max="100000"
+                max="10000"
                 value={pointsAmount}
                 onChange={(e) => setPointsAmount(parseInt(e.target.value) || 1)}
               />
             </div>
             
-            <div className="text-sm text-gray-500">
-              将为所有用户发放 {pointsAmount} 积分
+            <div className="space-y-2">
+              <Label>发放原因</Label>
+              <Input
+                type="text"
+                placeholder="例如: 新年活动赠送"
+                value={pointsReason}
+                onChange={(e) => setPointsReason(e.target.value)}
+              />
             </div>
             
             <Button 
-              onClick={handleSendPoints} 
-              disabled={isSendingPoints}
+              onClick={handleIssueAllUsersPoints} 
+              disabled={issueAllUsersPointsMutation.isPending}
               className="w-full"
             >
-              {isSendingPoints ? (
+              {issueAllUsersPointsMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   发放中...
@@ -214,33 +277,55 @@ export default function AdminTools() {
               <UserPlus className="h-5 w-5 text-blue-500" />
               <CardTitle>创建测试账号</CardTitle>
             </div>
-            <CardDescription>创建带有初始数据的测试账号</CardDescription>
+            <CardDescription>创建Telegram测试账号</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label>账号名称</Label>
+              <Label>Telegram ID *</Label>
               <Input
                 type="text"
-                placeholder="例如: Test User 001"
-                value={testAccountName}
-                onChange={(e) => setTestAccountName(e.target.value)}
+                placeholder="例如: 123456789"
+                value={telegramId}
+                onChange={(e) => setTelegramId(e.target.value)}
               />
             </div>
             
-            <div className="text-sm text-gray-500">
-              自动获得：
-              <ul className="list-disc list-inside mt-1">
-                <li>1000 积分</li>
-                <li>10 张满100减50优惠券</li>
-              </ul>
+            <div className="space-y-2">
+              <Label>用户名 *</Label>
+              <Input
+                type="text"
+                placeholder="例如: testuser001"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>名字（可选）</Label>
+              <Input
+                type="text"
+                placeholder="例如: Test"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>姓氏（可选）</Label>
+              <Input
+                type="text"
+                placeholder="例如: User"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
             </div>
             
             <Button 
               onClick={handleCreateTestAccount} 
-              disabled={isCreatingAccount}
+              disabled={createTestAccountMutation.isPending}
               className="w-full"
             >
-              {isCreatingAccount ? (
+              {createTestAccountMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   创建中...
@@ -252,6 +337,18 @@ export default function AdminTools() {
           </CardContent>
         </Card>
       </div>
+      
+      <Card className="bg-blue-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="text-blue-900">💡 使用说明</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-blue-800 space-y-2">
+          <p><strong>批量发放优惠券：</strong>选择优惠券模板和数量，为所有现有用户发放优惠券</p>
+          <p><strong>批量发放积分：</strong>输入积分数量和原因，为所有现有用户增加积分</p>
+          <p><strong>创建测试账号：</strong>创建一个Telegram测试用户，可以用于测试订单、支付等功能</p>
+          <p className="text-red-600"><strong>注意：</strong>批量操作不可撤销，请谨慎操作！</p>
+        </CardContent>
+      </Card>
     </div>
   );
 }
