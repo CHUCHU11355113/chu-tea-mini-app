@@ -1187,23 +1187,6 @@ export async function issueUserCoupon(userId: number, templateId: number) {
   return { success: true, couponId };
 }
 
-export async function getPointsBalance(userId: number) {
-  const db = await getDb();
-  if (!db) return { total: 0, available: 0 };
-  
-  const user = await db.select({
-    totalPoints: users.totalPoints,
-    availablePoints: users.availablePoints,
-  }).from(users).where(eq(users.id, userId)).limit(1);
-  
-  if (user.length === 0) return { total: 0, available: 0 };
-  
-  return {
-    total: user[0].totalPoints,
-    available: user[0].availablePoints,
-  };
-}
-
 // 管理员直接发放积分
 export async function addUserPoints(userId: number, points: number, reason: string) {
   const db = await getDb();
