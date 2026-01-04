@@ -1647,6 +1647,147 @@ export const appRouter = router({
     initTestData: adminProcedure.mutation(async () => {
       return await initTestData();
     }),
+    
+    // 批量发放优惠券给所有用户
+    issueAllUsersCoupons: adminProcedure
+      .input(z.object({
+        couponId: z.number(),
+        quantity: z.number().min(1).max(100),
+      }))
+      .mutation(async ({ input }) => {
+        const { couponId, quantity } = input;
+        
+        // 获取所有用户
+        const users = await db.getAllUsers();
+        
+        let successCount = 0;
+        let failCount = 0;
+        
+        for (const user of users) {
+          try {
+            for (let i = 0; i < quantity; i++) {
+              await db.issueUserCoupon(user.id, couponId);
+            }
+            successCount++;
+          } catch (error) {
+            console.error(`Failed to issue coupons to user ${user.id}:`, error);
+            failCount++;
+          }
+        }
+        
+        return {
+          success: true,
+          message: `Successfully issued ${quantity} coupons to ${successCount} users. Failed: ${failCount}`,
+          successCount,
+          failCount,
+        };
+      }),
+    
+    // 批量发放积分给所有用户
+    issueAllUsersPoints: adminProcedure
+      .input(z.object({
+        points: z.number().min(1).max(10000),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { points, reason } = input;
+        
+        // 获取所有用户
+        const users = await db.getAllUsers();
+        
+        let successCount = 0;
+        let failCount = 0;
+        
+        for (const user of users) {
+          try {
+            await db.addUserPoints(user.id, points, reason || 'Admin issued points');
+            successCount++;
+          } catch (error) {
+            console.error(`Failed to issue points to user ${user.id}:`, error);
+            failCount++;
+          }
+        }
+        
+        return {
+          success: true,
+          message: `Successfully issued ${points} points to ${successCount} users. Failed: ${failCount}`,
+          successCount,
+          failCount,
+        };
+      }),
+    
+    // 发放优惠券给特定用户
+    issueUserCoupons: adminProcedure
+      .input(z.object({
+        userId: z.number(),
+        couponId: z.number(),
+        quantity: z.number().min(1).max(100),
+      }))
+      .mutation(async ({ input }) => {
+        const { userId, couponId, quantity } = input;
+        
+        for (let i = 0; i < quantity; i++) {
+          await db.issueUserCoupon(userId, couponId);
+        }
+        
+        return {
+          success: true,
+          message: `Successfully issued ${quantity} coupons to user ${userId}`,
+        };
+      }),
+    
+    // 发放积分给特定用户
+    issueUserPoints: adminProcedure
+      .input(z.object({
+        userId: z.number(),
+        points: z.number().min(1).max(10000),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { userId, points, reason } = input;
+        
+        await db.addUserPoints(userId, points, reason || 'Admin issued points');
+        
+        return {
+          success: true,
+          message: `Successfully issued ${points} points to user ${userId}`,
+        };
+      }),
+    
+    // 创建测试账号
+    createTestAccount: adminProcedure
+      .input(z.object({
+        telegramId: z.string(),
+        username: z.string(),
+        firstName: z.string().optional(),
+        lastName: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { telegramId, username, firstName, lastName } = input;
+        
+        // 检查是否已存在
+        const existingUser = await db.getUserByTelegramId(telegramId);
+        if (existingUser) {
+          throw new Error(`Test account with Telegram ID ${telegramId} already exists`);
+        }
+        
+        // 创建用户
+        const openId = `telegram_${telegramId}`;
+        const user = await db.createUser({
+          openId,
+          username: username || `test_${telegramId}`,
+          avatarUrl: '',
+          telegramId,
+          firstName: firstName || 'Test',
+          lastName: lastName || 'User',
+        });
+        
+        return {
+          success: true,
+          message: `Test account created successfully`,
+          user,
+        };
+      }),
   }),
 });
 

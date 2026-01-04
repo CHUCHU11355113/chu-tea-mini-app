@@ -366,5 +366,61 @@
     "failed": "Sync failed",
     "syncNow": "Sync Now",
     "noOrders": "No offline orders"
+  },
+  "admin": {
+    "title": "Admin",
+    "nav": {
+      "dashboard": "Dashboard",
+      "products": {
+        "title": "Products",
+        "list": "Product List",
+        "config": "Product Config",
+        "options": "Product Options"
+      },
+      "orders": {
+        "title": "Orders",
+        "list": "Order List",
+        "payments": "Payment History"
+      },
+      "marketing": {
+        "title": "Marketing",
+        "dashboard": "Marketing Dashboard",
+        "ads": "Ads Management",
+        "coupons": "Coupons Management",
+        "points": "Points Rules",
+        "campaigns": "Campaigns",
+        "triggers": "Marketing Triggers",
+        "triggerTemplates": "Trigger Templates",
+        "abTest": "A/B Test",
+        "influencer": "Influencer Campaigns",
+        "influencerWithdrawals": "Influencer Withdrawals",
+        "influencerAnalytics": "Influencer Analytics"
+      },
+      "members": {
+        "title": "Members",
+        "list": "Member List",
+        "tags": "Member Tags"
+      },
+      "stores": {
+        "title": "Stores",
+        "list": "Store List",
+        "delivery": "Delivery Settings"
+      },
+      "system": {
+        "title": "System",
+        "api": "API Config",
+        "iiko": "iiko Integration",
+        "iikoMonitor": "iiko Monitor",
+        "yookassa": "Payment Config",
+        "logs": "System Logs",
+        "notifications": "Notifications"
+      },
+      "analytics": {
+        "title": "Analytics"
+      },
+      "tools": {
+        "title": "Admin Tools"
+      }
+    }
   }
 }

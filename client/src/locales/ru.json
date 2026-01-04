@@ -332,17 +332,56 @@
   "admin": {
     "nav": {
       "dashboard": "Панель управления",
-      "ads": "Реклама",
-      "products": "Товары",
-      "coupons": "Купоны",
-      "orders": "Заказы",
-      "marketing": "Маркетинг",
-      "stores": "Магазины",
-      "users": "Пользователи",
-      "api": "API настройки",
-      "iiko": "IIKO настройки",
-      "logs": "Журнал операций",
-      "notifications": "Уведомления"
+      "products": {
+        "title": "Товары",
+        "list": "Список товаров",
+        "config": "Настройки товаров",
+        "options": "Опции товаров"
+      },
+      "orders": {
+        "title": "Заказы",
+        "list": "Список заказов",
+        "payments": "История платежей"
+      },
+      "marketing": {
+        "title": "Маркетинг",
+        "dashboard": "Панель маркетинга",
+        "ads": "Реклама",
+        "coupons": "Купоны",
+        "points": "Правила баллов",
+        "campaigns": "Кампании",
+        "triggers": "Триггеры",
+        "triggerTemplates": "Шаблоны триггеров",
+        "abTest": "A/B тест",
+        "influencer": "Кампании инфлюенсеров",
+        "influencerWithdrawals": "Вывод средств",
+        "influencerAnalytics": "Аналитика инфлюенсеров"
+      },
+      "members": {
+        "title": "Участники",
+        "list": "Список участников",
+        "tags": "Теги участников"
+      },
+      "stores": {
+        "title": "Магазины",
+        "list": "Список магазинов",
+        "delivery": "Настройки доставки"
+      },
+      "system": {
+        "title": "Система",
+        "api": "API настройки",
+        "iiko": "iiko интеграция",
+        "iikoMonitor": "iiko мониторинг",
+        "yookassa": "Настройки платежей",
+        "logs": "Журнал системы",
+        "notifications": "Уведомления"
+      },
+      "analytics": {
+        "title": "Аналитика"
+      },
+      "tools": {
+        "title": "Инструменты"
+      }
     },
     "notifications": {
       "title": "Уведомления",

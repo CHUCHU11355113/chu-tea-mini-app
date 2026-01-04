@@ -14,31 +14,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
   LayoutDashboard,
-  Image,
   Package,
-  Ticket,
-  Coins,
-  Users,
-  Megaphone,
   ShoppingCart,
+  Megaphone,
+  Users,
   Store,
   Settings,
-  FileText,
-  Shield,
+  BarChart3,
+  Wrench,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   LogOut,
-  Bell,
-  Search,
   Globe,
-  AlertTriangle,
-  Plug,
-  Cpu,
-  CreditCard,
-  TrendingUp,
-  BarChart3,
-  FlaskConical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import NotificationBell from "@/components/NotificationBell";
@@ -50,34 +44,88 @@ interface AdminLayoutProps {
 interface NavItem {
   icon: React.ElementType;
   labelKey: string;
-  path: string;
-  permission?: string;
-  badge?: number;
+  path?: string;
   children?: NavItem[];
 }
 
 const navItems: NavItem[] = [
-  { icon: LayoutDashboard, labelKey: "admin.nav.dashboard", path: "/admin" },
-  { icon: Image, labelKey: "admin.nav.ads", path: "/admin/ads" },
-  { icon: Package, labelKey: "admin.nav.products", path: "/admin/products" },
-  { icon: Ticket, labelKey: "admin.nav.coupons", path: "/admin/coupons" },
-  { icon: ShoppingCart, labelKey: "admin.nav.orders", path: "/admin/orders" },
-  { icon: Megaphone, labelKey: "admin.nav.marketing", path: "/admin/marketing" },
-  { icon: TrendingUp, labelKey: "admin.nav.marketingDashboard", path: "/admin/marketing-dashboard" },
-  { icon: FlaskConical, labelKey: "admin.nav.abTest", path: "/admin/ab-test" },
-  { icon: Store, labelKey: "admin.nav.stores", path: "/admin/stores" },
-  { icon: Users, labelKey: "admin.nav.users", path: "/admin/users" },
-  { icon: Bell, labelKey: "admin.nav.notifications", path: "/admin/notifications" },
-  { icon: Plug, labelKey: "admin.nav.api", path: "/admin/api" },
-  { icon: Cpu, labelKey: "admin.nav.iiko", path: "/admin/iiko" },
-  { icon: BarChart3, labelKey: "admin.nav.iikoMonitor", path: "/admin/iiko-monitor" },
-  { icon: CreditCard, labelKey: "admin.nav.yookassa", path: "/admin/yookassa" },
-  { icon: Coins, labelKey: "admin.nav.payments", path: "/admin/payments" },
-  { icon: Settings, labelKey: "admin.nav.productConfig", path: "/admin/product-config" },
-  { icon: Settings, labelKey: "admin.nav.deliverySettings", path: "/admin/delivery-settings" },
-  { icon: Coins, labelKey: "admin.nav.pointsRules", path: "/admin/points-rules" },
-  { icon: BarChart3, labelKey: "admin.nav.analytics", path: "/admin/analytics" },
-  { icon: FileText, labelKey: "admin.nav.logs", path: "/admin/logs" },
+  { 
+    icon: LayoutDashboard, 
+    labelKey: "admin.nav.dashboard", 
+    path: "/admin" 
+  },
+  { 
+    icon: Package, 
+    labelKey: "admin.nav.products.title",
+    children: [
+      { icon: Package, labelKey: "admin.nav.products.list", path: "/admin/products" },
+      { icon: Settings, labelKey: "admin.nav.products.config", path: "/admin/product-config" },
+      { icon: Settings, labelKey: "admin.nav.products.options", path: "/admin/product-management" },
+    ]
+  },
+  { 
+    icon: ShoppingCart, 
+    labelKey: "admin.nav.orders.title",
+    children: [
+      { icon: ShoppingCart, labelKey: "admin.nav.orders.list", path: "/admin/orders" },
+      { icon: BarChart3, labelKey: "admin.nav.orders.payments", path: "/admin/payments" },
+    ]
+  },
+  { 
+    icon: Megaphone, 
+    labelKey: "admin.nav.marketing.title",
+    children: [
+      { icon: LayoutDashboard, labelKey: "admin.nav.marketing.dashboard", path: "/admin/marketing-dashboard" },
+      { icon: Megaphone, labelKey: "admin.nav.marketing.ads", path: "/admin/ads" },
+      { icon: Megaphone, labelKey: "admin.nav.marketing.coupons", path: "/admin/coupons" },
+      { icon: Megaphone, labelKey: "admin.nav.marketing.points", path: "/admin/points-rules" },
+      { icon: Megaphone, labelKey: "admin.nav.marketing.campaigns", path: "/admin/marketing" },
+      { icon: Megaphone, labelKey: "admin.nav.marketing.triggers", path: "/admin/marketing-triggers" },
+      { icon: Megaphone, labelKey: "admin.nav.marketing.triggerTemplates", path: "/admin/trigger-templates" },
+      { icon: BarChart3, labelKey: "admin.nav.marketing.abTest", path: "/admin/ab-test" },
+      { icon: Users, labelKey: "admin.nav.marketing.influencer", path: "/admin/influencer-campaigns" },
+      { icon: Users, labelKey: "admin.nav.marketing.influencerWithdrawals", path: "/admin/influencer-withdrawals" },
+      { icon: BarChart3, labelKey: "admin.nav.marketing.influencerAnalytics", path: "/admin/influencer-analytics" },
+    ]
+  },
+  { 
+    icon: Users, 
+    labelKey: "admin.nav.members.title",
+    children: [
+      { icon: Users, labelKey: "admin.nav.members.list", path: "/admin/users" },
+      { icon: Users, labelKey: "admin.nav.members.tags", path: "/admin/member-tags" },
+    ]
+  },
+  { 
+    icon: Store, 
+    labelKey: "admin.nav.stores.title",
+    children: [
+      { icon: Store, labelKey: "admin.nav.stores.list", path: "/admin/stores" },
+      { icon: Settings, labelKey: "admin.nav.stores.delivery", path: "/admin/delivery-settings" },
+    ]
+  },
+  { 
+    icon: Settings, 
+    labelKey: "admin.nav.system.title",
+    children: [
+      { icon: Settings, labelKey: "admin.nav.system.api", path: "/admin/api" },
+      { icon: Settings, labelKey: "admin.nav.system.iiko", path: "/admin/iiko" },
+      { icon: BarChart3, labelKey: "admin.nav.system.iikoMonitor", path: "/admin/iiko-monitor" },
+      { icon: Settings, labelKey: "admin.nav.system.yookassa", path: "/admin/yookassa" },
+      { icon: Settings, labelKey: "admin.nav.system.logs", path: "/admin/logs" },
+      { icon: Settings, labelKey: "admin.nav.system.notifications", path: "/admin/notifications" },
+    ]
+  },
+  { 
+    icon: BarChart3, 
+    labelKey: "admin.nav.analytics.title", 
+    path: "/admin/analytics" 
+  },
+  { 
+    icon: Wrench, 
+    labelKey: "admin.nav.tools.title", 
+    path: "/admin/tools" 
+  },
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
@@ -85,10 +133,30 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [location] = useLocation();
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [openMenus, setOpenMenus] = useState<string[]>([]);
 
   const changeLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
+  };
+
+  const toggleMenu = (labelKey: string) => {
+    setOpenMenus(prev => 
+      prev.includes(labelKey) 
+        ? prev.filter(key => key !== labelKey)
+        : [...prev, labelKey]
+    );
+  };
+
+  const isMenuOpen = (labelKey: string) => openMenus.includes(labelKey);
+
+  const isPathActive = (path?: string, children?: NavItem[]) => {
+    if (path) {
+      return location === path || location.startsWith(path + "/");
+    }
+    if (children) {
+      return children.some(child => child.path && (location === child.path || location.startsWith(child.path + "/")));
+    }
+    return false;
   };
 
   return (
@@ -125,9 +193,67 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <nav className="space-y-1 px-2">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = location === item.path || location.startsWith(item.path + "/");
+              const isActive = isPathActive(item.path, item.children);
+              
+              // 如果有子菜单
+              if (item.children && !collapsed) {
+                const isOpen = isMenuOpen(item.labelKey);
+                return (
+                  <Collapsible
+                    key={item.labelKey}
+                    open={isOpen}
+                    onOpenChange={() => toggleMenu(item.labelKey)}
+                  >
+                    <CollapsibleTrigger asChild>
+                      <div
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors cursor-pointer",
+                          isActive
+                            ? "bg-yellow-100 text-yellow-900 dark:bg-yellow-900/20 dark:text-yellow-400"
+                            : "text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+                        )}
+                      >
+                        <Icon className="h-5 w-5 flex-shrink-0" />
+                        <span className="text-sm font-medium truncate flex-1">
+                          {t(item.labelKey)}
+                        </span>
+                        <ChevronDown 
+                          className={cn(
+                            "h-4 w-4 transition-transform",
+                            isOpen && "transform rotate-180"
+                          )} 
+                        />
+                      </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="ml-4 mt-1 space-y-1">
+                      {item.children.map((child) => {
+                        const ChildIcon = child.icon;
+                        const isChildActive = child.path && (location === child.path || location.startsWith(child.path + "/"));
+                        return (
+                          <Link key={child.path} href={child.path!}>
+                            <div
+                              className={cn(
+                                "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors cursor-pointer",
+                                isChildActive
+                                  ? "bg-yellow-50 text-yellow-900 dark:bg-yellow-900/10 dark:text-yellow-400"
+                                  : "text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-700/50"
+                              )}
+                            >
+                              <span className="text-sm truncate">
+                                {t(child.labelKey)}
+                              </span>
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </CollapsibleContent>
+                  </Collapsible>
+                );
+              }
+              
+              // 没有子菜单的项目
               return (
-                <Link key={item.path} href={item.path}>
+                <Link key={item.path} href={item.path!}>
                   <div
                     className={cn(
                       "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors cursor-pointer",
@@ -142,61 +268,26 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         {t(item.labelKey)}
                       </span>
                     )}
-                    {!collapsed && item.badge && item.badge > 0 && (
-                      <span className="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                        {item.badge}
-                      </span>
-                    )}
                   </div>
                 </Link>
               );
             })}
           </nav>
         </ScrollArea>
-
-        {/* User Info */}
-        <div className="border-t border-gray-200 dark:border-gray-700 p-4">
-          {!collapsed ? (
-            <div className="flex items-center gap-3">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src={user?.avatar || undefined} />
-                <AvatarFallback>{user?.name?.charAt(0) || "A"}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{user?.name || "Admin"}</p>
-                <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-              </div>
-            </div>
-          ) : (
-            <Avatar className="h-8 w-8 mx-auto">
-              <AvatarImage src={user?.avatar || undefined} />
-              <AvatarFallback>{user?.name?.charAt(0) || "A"}</AvatarFallback>
-            </Avatar>
-          )}
-        </div>
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Header */}
+        {/* Header */}
         <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6">
-          {/* Search */}
-          <div className="flex items-center gap-4 flex-1 max-w-xl">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder={t("admin.search.placeholder")}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              />
-            </div>
+          <div className="flex items-center gap-4">
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+              {t("admin.title")}
+            </h1>
           </div>
 
-          {/* Right Actions */}
           <div className="flex items-center gap-4">
-            {/* Language Switcher */}
+            {/* Language Selector */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -205,13 +296,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => changeLanguage("zh")}>
-                  🇨🇳 中文
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("ru")}>
-                  🇷🇺 Русский
+                  中文
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => changeLanguage("en")}>
-                  🇺🇸 English
+                  English
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => changeLanguage("ru")}>
+                  Русский
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -222,26 +313,26 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.avatar || undefined} />
-                    <AvatarFallback>{user?.name?.charAt(0) || "A"}</AvatarFallback>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user?.avatar || ""} alt={user?.name || ""} />
+                    <AvatarFallback>{user?.name?.[0] || "A"}</AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium hidden md:inline">
-                    {user?.name || "Admin"}
-                  </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>{t("admin.user.myAccount")}</DropdownMenuLabel>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user?.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.username || user?.openId}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/admin/settings">{t("admin.user.settings")}</Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => logout()} className="text-red-600">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  {t("admin.user.logout")}
+                <DropdownMenuItem onClick={logout} className="text-red-600">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>{t("auth.logout")}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -249,8 +340,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto p-6">
-          {children}
+        <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
+          <div className="container mx-auto p-6">
+            {children}
+          </div>
         </main>
       </div>
     </div>

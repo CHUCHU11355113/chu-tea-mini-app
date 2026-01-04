@@ -85,6 +85,7 @@ const AdminMemberTagsManagement = lazy(() => import("./pages/admin/MemberTagsMan
 const AdminInfluencerCampaigns = lazy(() => import("./pages/admin/InfluencerCampaigns"));
 const AdminInfluencerWithdrawals = lazy(() => import("./pages/admin/InfluencerWithdrawals"));
 const AdminInfluencerAnalytics = lazy(() => import("./pages/admin/InfluencerAnalyticsEnhanced"));
+const AdminTools = lazy(() => import("./pages/admin/AdminTools"));
 
 function Router() {
   // 预加载常用页面
@@ -143,36 +144,54 @@ function Router() {
       <Route path="/settings" component={Settings} />
       <Route path="/notification-settings" component={NotificationSettings} />
       
-{/* 后台管理 */}
+{/* 后台管理 - 模块化结构 */}
+      {/* 数据概览 */}
       <Route path="/admin" component={() => <AdminLayout><AdminDashboard /></AdminLayout>} />
-      <Route path="/admin/ads" component={() => <AdminLayout><AdminAds /></AdminLayout>} />
+      
+      {/* 商品管理模块 */}
       <Route path="/admin/products" component={() => <AdminLayout><AdminProducts /></AdminLayout>} />
-      <Route path="/admin/product-management" component={() => <AdminLayout><AdminProductManagement /></AdminLayout>} />
-      <Route path="/admin/member-tags" component={() => <AdminLayout><AdminMemberTagsManagement /></AdminLayout>} />
-      <Route path="/admin/coupons" component={() => <AdminLayout><AdminCoupons /></AdminLayout>} />
-      <Route path="/admin/orders" component={() => <AdminLayout><AdminOrders /></AdminLayout>} />
-      <Route path="/admin/marketing" component={() => <AdminLayout><AdminMarketing /></AdminLayout>} />
-      <Route path="/admin/stores" component={() => <AdminLayout><AdminStores /></AdminLayout>} />
-      <Route path="/admin/users" component={() => <AdminLayout><AdminUsers /></AdminLayout>} />
-      <Route path="/admin/api" component={() => <AdminLayout><AdminApiConfig /></AdminLayout>} />
-      <Route path="/admin/logs" component={() => <AdminLayout><AdminLogs /></AdminLayout>} />
-      <Route path="/admin/notifications" component={AdminNotifications} />
-      <Route path="/admin/iiko" component={() => <AdminLayout><AdminIikoConfig /></AdminLayout>} />
-      <Route path="/admin/iiko-monitor" component={() => <AdminLayout><AdminIikoMonitor /></AdminLayout>} />
-      <Route path="/admin/yookassa" component={() => <AdminLayout><AdminYooKassaConfig /></AdminLayout>} />
-      <Route path="/admin/payments" component={() => <AdminLayout><AdminPaymentHistory /></AdminLayout>} />
       <Route path="/admin/product-config" component={() => <AdminLayout><AdminProductConfig /></AdminLayout>} />
-      <Route path="/admin/delivery-settings" component={() => <AdminLayout><AdminDeliverySettings /></AdminLayout>} />
-      <Route path="/admin/analytics" component={() => <AdminLayout><AdminAnalytics /></AdminLayout>} />
-      <Route path="/admin/points-rules" component={() => <AdminLayout><AdminPointsRules /></AdminLayout>} />
-      <Route path="/admin/marketing-triggers" component={() => <AdminLayout><AdminMarketingTriggers /></AdminLayout>} />
-      <Route path="/admin/trigger-executions/:id" component={() => <AdminLayout><AdminTriggerExecutionHistory /></AdminLayout>} />
+      <Route path="/admin/product-management" component={() => <AdminLayout><AdminProductManagement /></AdminLayout>} />
+      
+      {/* 订单管理模块 */}
+      <Route path="/admin/orders" component={() => <AdminLayout><AdminOrders /></AdminLayout>} />
+      <Route path="/admin/payments" component={() => <AdminLayout><AdminPaymentHistory /></AdminLayout>} />
+      
+      {/* 营销管理模块 */}
       <Route path="/admin/marketing-dashboard" component={() => <AdminLayout><AdminMarketingDashboard /></AdminLayout>} />
+      <Route path="/admin/ads" component={() => <AdminLayout><AdminAds /></AdminLayout>} />
+      <Route path="/admin/coupons" component={() => <AdminLayout><AdminCoupons /></AdminLayout>} />
+      <Route path="/admin/points-rules" component={() => <AdminLayout><AdminPointsRules /></AdminLayout>} />
+      <Route path="/admin/marketing" component={() => <AdminLayout><AdminMarketing /></AdminLayout>} />
+      <Route path="/admin/marketing-triggers" component={() => <AdminLayout><AdminMarketingTriggers /></AdminLayout>} />
       <Route path="/admin/trigger-templates" component={() => <AdminLayout><AdminTriggerTemplates /></AdminLayout>} />
+      <Route path="/admin/trigger-executions/:id" component={() => <AdminLayout><AdminTriggerExecutionHistory /></AdminLayout>} />
       <Route path="/admin/ab-test" component={() => <AdminLayout><AdminABTestComparison /></AdminLayout>} />
       <Route path="/admin/influencer-campaigns" component={() => <AdminLayout><AdminInfluencerCampaigns /></AdminLayout>} />
       <Route path="/admin/influencer-withdrawals" component={() => <AdminLayout><AdminInfluencerWithdrawals /></AdminLayout>} />
       <Route path="/admin/influencer-analytics" component={() => <AdminLayout><AdminInfluencerAnalytics /></AdminLayout>} />
+      
+      {/* 会员管理模块 */}
+      <Route path="/admin/users" component={() => <AdminLayout><AdminUsers /></AdminLayout>} />
+      <Route path="/admin/member-tags" component={() => <AdminLayout><AdminMemberTagsManagement /></AdminLayout>} />
+      
+      {/* 门店管理模块 */}
+      <Route path="/admin/stores" component={() => <AdminLayout><AdminStores /></AdminLayout>} />
+      <Route path="/admin/delivery-settings" component={() => <AdminLayout><AdminDeliverySettings /></AdminLayout>} />
+      
+      {/* 系统设置模块 */}
+      <Route path="/admin/api" component={() => <AdminLayout><AdminApiConfig /></AdminLayout>} />
+      <Route path="/admin/iiko" component={() => <AdminLayout><AdminIikoConfig /></AdminLayout>} />
+      <Route path="/admin/iiko-monitor" component={() => <AdminLayout><AdminIikoMonitor /></AdminLayout>} />
+      <Route path="/admin/yookassa" component={() => <AdminLayout><AdminYooKassaConfig /></AdminLayout>} />
+      <Route path="/admin/logs" component={() => <AdminLayout><AdminLogs /></AdminLayout>} />
+      <Route path="/admin/notifications" component={AdminNotifications} />
+      
+      {/* 数据分析模块 */}
+      <Route path="/admin/analytics" component={() => <AdminLayout><AdminAnalytics /></AdminLayout>} />
+      
+      {/* 管理工具模块 */}
+      <Route path="/admin/tools" component={() => <AdminLayout><AdminTools /></AdminLayout>} />
       
       {/* 404 */}
       <Route component={NotFound} />

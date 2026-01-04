@@ -411,33 +411,57 @@
   },
   "admin": {
     "nav": {
-      "dashboard": "仪表盘",
-      "ads": "广告管理",
-      "products": "商品管理",
-      "coupons": "优惠券",
-      "points": "积分管理",
-      "members": "会员管理",
-      "marketing": "营销自动化",
-      "marketingDashboard": "营销效果",
-      "abTest": "A/B 测试",
-      "orders": "订单管理",
-      "stores": "门店管理",
-      "reports": "数据报表",
-      "api": "API配置",
-      "iiko": "IIKO配置",
-      "alerts": "异常监控",
-      "logs": "操作日志",
-      "permissions": "权限管理",
-      "settings": "系统设置",
-      "users": "用户管理",
-      "notifications": "通知管理",
-      "iikoMonitor": "IIKO 监控",
-      "yookassa": "YooKassa 配置",
-      "payments": "支付记录",
-      "productConfig": "商品配置",
-      "deliverySettings": "配送设置",
-      "pointsRules": "积分规则",
-      "analytics": "数据分析"
+      "dashboard": "数据概览",
+      "products": {
+        "title": "商品管理",
+        "list": "商品列表",
+        "config": "商品配置",
+        "options": "商品选项"
+      },
+      "orders": {
+        "title": "订单管理",
+        "list": "订单列表",
+        "payments": "支付记录"
+      },
+      "marketing": {
+        "title": "营销管理",
+        "dashboard": "营销仪表盘",
+        "ads": "广告管理",
+        "coupons": "优惠券管理",
+        "points": "积分规则",
+        "campaigns": "营销活动",
+        "triggers": "营销触发器",
+        "triggerTemplates": "触发器模板",
+        "abTest": "A/B测试",
+        "influencer": "达人推广",
+        "influencerWithdrawals": "达人提现",
+        "influencerAnalytics": "达人分析"
+      },
+      "members": {
+        "title": "会员管理",
+        "list": "会员列表",
+        "tags": "会员标签"
+      },
+      "stores": {
+        "title": "门店管理",
+        "list": "门店列表",
+        "delivery": "配送设置"
+      },
+      "system": {
+        "title": "系统设置",
+        "api": "API配置",
+        "iiko": "iiko集成",
+        "iikoMonitor": "iiko监控",
+        "yookassa": "支付配置",
+        "logs": "系统日志",
+        "notifications": "通知管理"
+      },
+      "analytics": {
+        "title": "数据分析"
+      },
+      "tools": {
+        "title": "管理工具"
+      }
     },
     "notifications": {
       "title": "通知",

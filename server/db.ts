@@ -100,6 +100,12 @@ export async function getUserById(id: number) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function getAllUsers() {
+  const db = await getDb();
+  if (!db) return [];
+  return await db.select().from(users);
+}
+
 // ==================== 门店相关 ====================
 
 export async function getActiveStores() {
@@ -1136,8 +1142,91 @@ export async function applyAsInfluencer(userId: number, data: {
   
   // 更新用户角色
   await db.update(users).set({ role: 'influencer' }).where(eq(users.id, userId));
+    return { success: true, couponId };
+}
+
+// 管理员直接发放优惠券（跳过限制检查）
+export async function issueUserCoupon(userId: number, templateId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
   
-  return { success: true, code };
+  // 检查优惠券模板是否存在
+  const template = await db.select().from(couponTemplates)
+    .where(eq(couponTemplates.id, templateId))
+    .limit(1);
+  
+  if (template.length === 0) {
+    throw new Error("Coupon template not found");
+  }
+  
+  const tpl = template[0];
+  
+  // 计算过期时间
+  let expireAt: Date | null = null;
+  if (tpl.validDays) {
+    expireAt = new Date();
+    expireAt.setDate(expireAt.getDate() + tpl.validDays);
+  } else if (tpl.endAt) {
+    expireAt = tpl.endAt;
+  }
+  
+  // 创建用户优惠券
+  const result = await db.insert(userCoupons).values({
+    userId,
+    templateId,
+    expireAt,
+  });
+  
+  const couponId = Number(result[0].insertId);
+  
+  // 更新已领取数量
+  await db.update(couponTemplates)
+    .set({ usedQuantity: sql`${couponTemplates.usedQuantity} + 1` })
+    .where(eq(couponTemplates.id, templateId));
+  
+  return { success: true, couponId };
+}
+
+export async function getPointsBalance(userId: number) {
+  const db = await getDb();
+  if (!db) return { total: 0, available: 0 };
+  
+  const user = await db.select({
+    totalPoints: users.totalPoints,
+    availablePoints: users.availablePoints,
+  }).from(users).where(eq(users.id, userId)).limit(1);
+  
+  if (user.length === 0) return { total: 0, available: 0 };
+  
+  return {
+    total: user[0].totalPoints,
+    available: user[0].availablePoints,
+  };
+}
+
+// 管理员直接发放积分
+export async function addUserPoints(userId: number, points: number, reason: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // 更新用户积分
+  await db.update(users)
+    .set({
+      totalPoints: sql`${users.totalPoints} + ${points}`,
+      availablePoints: sql`${users.availablePoints} + ${points}`,
+    })
+    .where(eq(users.id, userId));
+  
+  // 记录积分历史
+  await db.insert(pointsHistory).values({
+    userId,
+    points,
+    type: 'earn',
+    reason,
+    createdAt: new Date(),
+  });
+  
+  return { success: true };
 }
 
 export async function getInfluencerLinks(userId: number) {
