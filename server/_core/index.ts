@@ -88,7 +88,7 @@ async function startServer() {
   }
 
   server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+    console.log(`Server running on port ${port}`);
     
     // 启动 IIKO 订单同步调度器
     startScheduler();
