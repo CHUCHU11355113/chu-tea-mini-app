@@ -10,6 +10,7 @@ import { influencerRouter } from "./routers/influencer";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
+import { getTVDisplayOrders, updateOrderStatus } from "./db-tv-display";
 
 export const appRouter = router({
   system: systemRouter,
@@ -274,6 +275,10 @@ export const appRouter = router({
 
   // 订单路由
   order: router({
+    // TV显示屏 - 获取待显示订单（公开接口，无需登录）
+    tvDisplay: publicProcedure.query(async () => {
+      return await getTVDisplayOrders();
+    }),
     list: protectedProcedure
       .input(z.object({
         orderType: z.enum(['tea', 'mall']).optional(),
