@@ -30,15 +30,27 @@ jobs:
         VITE_ANALYTICS_ENDPOINT: ""
         VITE_ANALYTICS_WEBSITE_ID: ""
     
+    - name: Clean old files on server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          cd /home/ubuntu/chu-tea-mini-app-main
+          rm -rf dist/public/assets/*
+          rm -f dist/index.js
+    
     - name: Deploy to server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         password: ${{ secrets.SERVER_PASSWORD }}
-        source: "dist/*,server/*,package.json,pnpm-lock.yaml"
+        source: "dist/*"
         target: "/home/ubuntu/chu-tea-mini-app-main"
         overwrite: true
+        strip_components: 0
     
     - name: Restart application
       uses: appleboy/ssh-action@master
@@ -48,6 +60,7 @@ jobs:
         password: ${{ secrets.SERVER_PASSWORD }}
         script: |
           cd /home/ubuntu/chu-tea-mini-app-main
-          pnpm install --prod
           pm2 restart chu-tea || pm2 start dist/index.js --name chu-tea
+          echo "Deployment completed at $(date)"
+
 
