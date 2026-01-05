@@ -43,102 +43,145 @@
 }
 
 :root {
-  /* Telegram 主题颜色变量（将由 JavaScript 动态设置） */
+  /* 黑白灰主题颜色 */
   --tg-bg-color: #ffffff;
-  --tg-secondary-bg-color: #f4f4f5;
-  --tg-text-color: #000000;
-  --tg-hint-color: #999999;
-  --tg-link-color: #2481cc;
-  --tg-button-color: #2481cc;
+  --tg-secondary-bg-color: #f5f5f5;
+  --tg-text-color: #1a1a1a;
+  --tg-hint-color: #737373;
+  --tg-link-color: #404040;
+  --tg-button-color: #2c2c2c;
   --tg-button-text-color: #ffffff;
   --tg-header-bg-color: #ffffff;
-  --tg-section-bg-color: #ffffff;
-  --tg-section-header-text-color: #6d6d72;
-  --tg-subtitle-text-color: #999999;
-  --tg-destructive-text-color: #ff3b30;
+  --tg-section-bg-color: #fafafa;
+  --tg-section-header-text-color: #525252;
+  --tg-subtitle-text-color: #737373;
+  --tg-destructive-text-color: #404040;
   
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
+  /* 主色调 - 黑色系 */
+  --primary: #2c2c2c;
+  --primary-foreground: #ffffff;
+  --sidebar-primary: #404040;
+  --sidebar-primary-foreground: #ffffff;
+  
+  /* 图表颜色 - 灰度渐变 */
+  --chart-1: #e5e5e5;
+  --chart-2: #a3a3a3;
+  --chart-3: #737373;
+  --chart-4: #525252;
+  --chart-5: #404040;
+  
   --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
+  
+  /* 背景和前景 - 白色背景，深灰文字 */
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  
+  /* 卡片 */
+  --card: #fafafa;
+  --card-foreground: #1a1a1a;
+  
+  /* 弹出层 */
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  
+  /* 次要色 */
+  --secondary: #f5f5f5;
+  --secondary-foreground: #404040;
+  
+  /* 静音色 */
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  
+  /* 强调色 */
+  --accent: #e5e5e5;
+  --accent-foreground: #1a1a1a;
+  
+  /* 破坏性操作 */
+  --destructive: #525252;
+  --destructive-foreground: #ffffff;
+  
+  /* 边框和输入 */
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #737373;
+  
+  /* 侧边栏 */
+  --sidebar: #fafafa;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #e5e5e5;
+  --sidebar-ring: #737373;
 }
 
 .dark {
-  /* Telegram 深色主题颜色变量（将由 JavaScript 动态设置） */
-  --tg-bg-color: #212121;
-  --tg-secondary-bg-color: #0f0f0f;
+  /* 深色模式 - 黑白灰反转 */
+  --tg-bg-color: #1a1a1a;
+  --tg-secondary-bg-color: #0a0a0a;
   --tg-text-color: #ffffff;
-  --tg-hint-color: #aaaaaa;
-  --tg-link-color: #8774e1;
-  --tg-button-color: #8774e1;
-  --tg-button-text-color: #ffffff;
-  --tg-header-bg-color: #212121;
-  --tg-section-bg-color: #0f0f0f;
-  --tg-section-header-text-color: #aaaaaa;
-  --tg-subtitle-text-color: #aaaaaa;
-  --tg-destructive-text-color: #ff595a;
+  --tg-hint-color: #a3a3a3;
+  --tg-link-color: #d4d4d4;
+  --tg-button-color: #e5e5e5;
+  --tg-button-text-color: #1a1a1a;
+  --tg-header-bg-color: #1a1a1a;
+  --tg-section-bg-color: #0a0a0a;
+  --tg-section-header-text-color: #a3a3a3;
+  --tg-subtitle-text-color: #a3a3a3;
+  --tg-destructive-text-color: #d4d4d4;
   
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  /* 主色调 - 浅灰色系 */
+  --primary: #e5e5e5;
+  --primary-foreground: #1a1a1a;
+  --sidebar-primary: #d4d4d4;
+  --sidebar-primary-foreground: #1a1a1a;
+  
+  /* 背景和前景 */
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  
+  /* 卡片 */
+  --card: #1a1a1a;
+  --card-foreground: #fafafa;
+  
+  /* 弹出层 */
+  --popover: #1a1a1a;
+  --popover-foreground: #fafafa;
+  
+  /* 次要色 */
+  --secondary: #262626;
+  --secondary-foreground: #d4d4d4;
+  
+  /* 静音色 */
+  --muted: #262626;
+  --muted-foreground: #a3a3a3;
+  
+  /* 强调色 */
+  --accent: #404040;
+  --accent-foreground: #fafafa;
+  
+  /* 破坏性操作 */
+  --destructive: #d4d4d4;
+  --destructive-foreground: #0a0a0a;
+  
+  /* 边框和输入 */
+  --border: #404040;
+  --input: #404040;
+  --ring: #a3a3a3;
+  
+  /* 图表颜色 - 深色模式灰度渐变 */
+  --chart-1: #404040;
+  --chart-2: #737373;
+  --chart-3: #a3a3a3;
+  --chart-4: #d4d4d4;
+  --chart-5: #e5e5e5;
+  
+  /* 侧边栏 */
+  --sidebar: #1a1a1a;
+  --sidebar-foreground: #fafafa;
+  --sidebar-accent: #262626;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: #404040;
+  --sidebar-ring: #a3a3a3;
 }
 
 @layer base {
